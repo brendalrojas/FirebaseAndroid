@@ -1,9 +1,11 @@
 package com.blrp.firebase.ui.viewmodel
 
 import android.util.Log
+import androidx.compose.animation.core.snap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blrp.firebase.FirebaseInstance
+import com.blrp.firebase.data.model.Book
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,40 +18,51 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
-class FirebaseViewModel: ViewModel() {
+class FirebaseViewModel : ViewModel() {
 
     private val database = Firebase.database
-    private val _data = MutableStateFlow<String?>(null)
-    val data: StateFlow<String?> = _data
+    private val _data = MutableStateFlow<List<Pair<String,Book>>?>(null)
+    val data: StateFlow<List<Pair<String,Book>>?> = _data
+    private val myReference = database.reference
 
     init {
         getRealTimeDatabase()
     }
 
     fun writeFirebase() {
-        val myRef = database.getReference("message")
         val randomValue: String = (0..100).random().toString()
-        myRef.setValue("Mi primera escritura: $randomValue")
-        Log.d("Firebase", "Firebase instance created ${myRef.database}")
+        val newLevel = myReference.push()   // Create a new level in the object
+        newLevel.setValue(getGenericBookModel(randomValue))
     }
+
+    private fun getGenericBookModel(randomValue: String) =
+        Book(title = "book $randomValue", description = "description")
 
     private fun getRealTimeDatabase() {
         viewModelScope.launch {
             collectDatabaseReference().collect {
-                _data.value = it.value.toString()
+                _data.value =  getCleanSnapshot(it)
             }
         }
+    }
+
+    private fun getCleanSnapshot(snapshot: DataSnapshot): List<Pair<String,Book>> {
+        val list  = snapshot.children.map { item ->
+            Pair(item.key ?: "", item.getValue(Book::class.java) ?: Book())
+        }
+        Log.d("FirebaseBlrp", "list $list")
+        return list
     }
 
     private fun collectDatabaseReference(): Flow<DataSnapshot> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("Firebase", "Firebase instance created ${snapshot.value}")
+                Log.d("FirebaseBlrp", "Firebase instance created ${snapshot.value}")
                 trySend(snapshot)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("Firebase", "Firebase instance created, error: ${error.message}")
+                Log.d("FirebaseBlrp", "Firebase instance created, error: ${error.message}")
             }
         }
         val myRef = database.reference
@@ -57,4 +70,9 @@ class FirebaseViewModel: ViewModel() {
 
         awaitClose { myRef.removeEventListener(listener) }
     }
+
+    fun removeFromDatabase(reference: String) {
+        myReference.child(reference).removeValue()
+    }
+
 }
