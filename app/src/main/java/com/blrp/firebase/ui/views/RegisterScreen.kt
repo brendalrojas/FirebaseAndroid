@@ -25,9 +25,9 @@ import com.blrp.firebase.ui.viewmodel.FirebaseViewModel
 
 @Composable
 fun RegisterScreen(viewModel: FirebaseViewModel, navController: NavController, modifier: Modifier) {
-    var title by remember { mutableStateOf("La felicidad cabe en una taza de café ") }
-    var description by remember { mutableStateOf("Llega una nueva delicia con sabor japonés del autor de Antes de que se enfríe el café , la novela que ya ha conquistado a más de tres millones de lectores en todo el mundo.") }
-    var isAvailable by remember { mutableStateOf(true) }
+    var title by remember { mutableStateOf(" ") }
+    var description by remember { mutableStateOf("") }
+    var isAvailable by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.fillMaxSize(),
