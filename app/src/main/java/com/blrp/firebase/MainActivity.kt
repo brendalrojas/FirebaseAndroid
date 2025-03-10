@@ -6,21 +6,23 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
+import com.blrp.firebase.ui.navigate.NavGraph
+import com.blrp.firebase.ui.navigate.ScreenRoutes
 import com.blrp.firebase.ui.theme.FirebaseTheme
 import com.blrp.firebase.ui.viewmodel.FirebaseViewModel
 
@@ -35,67 +37,48 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             FirebaseTheme {
-                Scaffold { innerPadding ->
-                    Screen(
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-
-
-}
-
-@Composable
-fun Screen(viewModel: FirebaseViewModel, modifier: Modifier) {
-    val data = viewModel.data.collectAsState()
-
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        item {
-            data.value?.forEach {
-                Card(
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = it.second.title ?: "",
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Button(
-                            onClick = {
-                                viewModel.removeFromDatabase(it.first)
-                            }) {
+                Scaffold(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    topBar = {
+                        Row(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                text = "Eliminar"
+                                "Firebase Realtime",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
                             )
+                            Button(onClick = {
+                                navController.navigate(ScreenRoutes.Register.route) {
+                                    popUpTo(0) {}
+                                }
+                            }) {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(R.drawable.addbook),
+                                    contentDescription = "AddBook"
+                                )
+                            }
                         }
                     }
+                ) { innerPadding ->
+                    NavGraph(
+                        navController = navController,
+                        firebaseViewModel = viewModel,
+                        modifier = Modifier.padding(innerPadding)
+                    )
+
                 }
-            }
-        }
-        item {
-            Button(onClick = {
-                viewModel.writeFirebase()
-            }) {
-                Text(
-                    text = "Actualizar información",
-                    modifier = Modifier
-                )
             }
         }
     }
 }
+
+

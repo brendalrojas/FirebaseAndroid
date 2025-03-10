@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blrp.firebase.FirebaseInstance
 import com.blrp.firebase.data.model.Book
+import com.blrp.firebase.ui.views.toResponse
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,12 +22,18 @@ import kotlinx.coroutines.launch
 class FirebaseViewModel : ViewModel() {
 
     private val database = Firebase.database
-    private val _data = MutableStateFlow<List<Pair<String,Book>>?>(null)
-    val data: StateFlow<List<Pair<String,Book>>?> = _data
     private val myReference = database.reference
+    private val _data = MutableStateFlow<List<Pair<String, Book>>?>(null)
+    val data: StateFlow<List<Pair<String, Book>>?> = _data
 
     init {
         getRealTimeDatabase()
+    }
+
+    fun writeBookFirebase(title: String, description: String, isAvailable: Boolean = false) {
+        val newLevel = myReference.push()   // Create a new level in the object
+        newLevel.setValue(Book(title = title, description = description, isAvailable = isAvailable))
+        Log.d("FirebaseBlrp", "Book created: $title, $description, $isAvailable")
     }
 
     fun writeFirebase() {
@@ -41,13 +48,13 @@ class FirebaseViewModel : ViewModel() {
     private fun getRealTimeDatabase() {
         viewModelScope.launch {
             collectDatabaseReference().collect {
-                _data.value =  getCleanSnapshot(it)
+                _data.value = getCleanSnapshot(it)
             }
         }
     }
 
-    private fun getCleanSnapshot(snapshot: DataSnapshot): List<Pair<String,Book>> {
-        val list  = snapshot.children.map { item ->
+    private fun getCleanSnapshot(snapshot: DataSnapshot): List<Pair<String, Book>> {
+        val list = snapshot.children.map { item ->
             Pair(item.key ?: "", item.getValue(Book::class.java) ?: Book())
         }
         Log.d("FirebaseBlrp", "list $list")
