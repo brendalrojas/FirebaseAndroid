@@ -16,7 +16,6 @@ import com.blrp.firebase.ui.theme.FirebaseTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             FirebaseTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
