@@ -17,7 +17,8 @@ hiltCommon = "1.2.0"
 hiltWork = "1.2.0"
 kspVersion = "2.0.0-1.0.21"
 symbolProcessingApi = "2.0.0-1.0.21"
-
+navigationRuntimeKtx = "2.8.5"
+navigationCompose = "2.8.5"
 
 
 [libraries]
@@ -44,6 +45,8 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "symbolProcessingApi" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 
 
