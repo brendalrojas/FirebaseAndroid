@@ -31,6 +31,7 @@ import com.blrp.firebase.R
 fun HomeScreen(
     modifier: Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
+    navigateToGame: () -> Unit
 ) {
 
     //val gameId = homeViewModel.gameId.collectAsState()
@@ -72,7 +73,10 @@ fun HomeScreen(
 
         OutlinedButton(
             modifier = modifier.padding(16.dp),
-            onClick = { homeViewModel.createGame() },
+            onClick = {
+                homeViewModel.createGame()
+                navigateToGame()
+            },
             border = BorderStroke(1.dp, Color(0xFFaf6c9f))
         ) {
             Text("Create game", color = Color(0xFFaf6c9f))

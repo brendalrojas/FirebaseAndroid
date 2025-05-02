@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.blrp.firebase.ui.game.GameScreen
 import com.blrp.firebase.ui.home.HomeScreen
 
 @Composable
@@ -18,6 +19,13 @@ fun NavGraph(
     ) {
         composable(ScreenRoutes.Home.route) {
             HomeScreen(
+                modifier = modifier,
+                navigateToGame = { navController.navigate("game") }
+            )
+        }
+
+        composable(ScreenRoutes.Game.route) {
+            GameScreen(
                 modifier = modifier
             )
         }
