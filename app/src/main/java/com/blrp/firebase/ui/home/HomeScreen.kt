@@ -31,10 +31,9 @@ import com.blrp.firebase.R
 fun HomeScreen(
     modifier: Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    navigateToGame: () -> Unit
+    navigateToGame: (String, String, Boolean) -> Unit,
 ) {
 
-    //val gameId = homeViewModel.gameId.collectAsState()
     var gameId by remember { mutableStateOf("") }
 
     Column(
@@ -61,7 +60,7 @@ fun HomeScreen(
 
         Button(
             modifier = modifier.padding(16.dp),
-            onClick = { homeViewModel.joinGame(gameId) },
+            onClick = { homeViewModel.joinGame(gameId, navigateToGame) },
             enabled = gameId.isNotEmpty(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFaf6c9f))
         ) {
@@ -74,8 +73,7 @@ fun HomeScreen(
         OutlinedButton(
             modifier = modifier.padding(16.dp),
             onClick = {
-                homeViewModel.createGame()
-                navigateToGame()
+                homeViewModel.createGame(navigateToGame)
             },
             border = BorderStroke(1.dp, Color(0xFFaf6c9f))
         ) {

@@ -19,6 +19,7 @@ kspVersion = "2.0.0-1.0.21"
 symbolProcessingApi = "2.0.0-1.0.21"
 navigationRuntimeKtx = "2.8.5"
 navigationCompose = "2.8.5"
+roomRuntimeAndroid = "2.7.1"
 
 
 [libraries]
@@ -47,6 +48,7 @@ androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.
 symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "symbolProcessingApi" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 
 
 
